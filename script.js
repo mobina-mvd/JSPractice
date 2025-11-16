@@ -2,6 +2,7 @@ const itemForm = document.getElementById("item-form");
 const itemInput = document.getElementById("item-input");
 const inputInvalid = document.getElementById("input-invalid");
 const itemList = document.getElementById("item-list");
+const clearBtn = document.getElementById("items-clear");
 
 function addItem(e) {
   e.preventDefault();
@@ -37,5 +38,20 @@ function createIcon(classes) {
   return icon;
 }
 
+function onClickItem(e) {
+  console.log(e.target);
+  const isIcon = e.target.classList.contains("bi-x");
+
+  if (isIcon) {
+    e.target.parentElement.remove();
+  }
+}
+
+function clearItems() {
+  itemList.textContent = "";
+}
+
 // Event listener
 itemForm.addEventListener("submit", addItem);
+itemList.addEventListener("click", onClickItem);
+clearBtn.addEventListener("click", clearItems);

@@ -72,17 +72,27 @@ function createIcon(classes) {
 }
 
 function onClickItem(e) {
-  console.log(e.target);
+  //   console.log(e.target);
   const isIcon = e.target.classList.contains("bi-x");
 
   if (isIcon) {
     e.target.parentElement.remove();
+    romoveItemFromStorage(e.target.parentElement.textContent);
     checkUI();
   }
 }
 
+function romoveItemFromStorage(item) {
+  let itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+  console.log(itemsFromStorage);
+
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
 function clearItems() {
   itemList.textContent = "";
+  localStorage.removeItem("items");
   checkUI();
 }
 

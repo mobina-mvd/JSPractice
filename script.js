@@ -5,6 +5,14 @@ const itemList = document.getElementById("item-list");
 const clearBtn = document.getElementById("items-clear");
 const filter = document.getElementById("filter");
 
+function displayItems() {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.forEach((item) => {
+    addItemToDOM(item);
+  });
+  checkUI();
+}
+
 function addItem(e) {
   e.preventDefault();
   const newItem = itemInput.value;
@@ -40,6 +48,12 @@ function addItemToDOM(item) {
 
 // Add Item to LocalStorage
 function addItemToStorage(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  itemsFromStorage.push(item);
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function getItemsFromStorage() {
   let itemsFromStorage;
 
   if (localStorage.getItem("items") === null) {
@@ -47,8 +61,7 @@ function addItemToStorage(item) {
   } else {
     itemsFromStorage = JSON.parse(localStorage.getItem("items"));
   }
-  itemsFromStorage.push(item);
-  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+  return itemsFromStorage;
 }
 
 function createIcon(classes) {
@@ -105,5 +118,5 @@ itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", onClickItem);
 clearBtn.addEventListener("click", clearItems);
 filter.addEventListener("input", filterItems);
-
+document.addEventListener("DOMContentLoaded", displayItems);
 checkUI();

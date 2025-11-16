@@ -68,9 +68,25 @@ function checkUI() {
   }
 }
 
+function filterItems(e) {
+  const items = itemList.querySelectorAll("li");
+  const text = e.target.value.toLowerCase();
+
+  items.forEach((item) => {
+    const itemText = item.firstChild.textContent.toLowerCase();
+
+    if (itemText.indexOf(text) !== -1) {
+      item.style.display = "flex";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
+
 // Event listener
 itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", onClickItem);
 clearBtn.addEventListener("click", clearItems);
+filter.addEventListener("input", filterItems);
 
 checkUI();

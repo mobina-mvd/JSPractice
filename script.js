@@ -16,11 +16,19 @@ function addItem(e) {
   } else {
     inputInvalid.textContent = "";
   }
+  addItemToDOM(newItem);
 
-  //   Generate Li
+  addItemToStorage(newItem);
+  itemInput.value = "";
+
+  checkUI();
+}
+
+// Add Item to UI
+function addItemToDOM(item) {
   const li = document.createElement("li");
   li.className = "list-item";
-  li.textContent = newItem;
+  li.textContent = item;
 
   //   Generate  and Assign icon to Li
   const icon = createIcon("bi bi-x fs-5 text-danger");
@@ -28,10 +36,19 @@ function addItem(e) {
 
   //   Assign li to ul
   itemList.appendChild(li);
+}
 
-  itemInput.value = "";
+// Add Item to LocalStorage
+function addItemToStorage(item) {
+  let itemsFromStorage;
 
-  checkUI();
+  if (localStorage.getItem("items") === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+  }
+  itemsFromStorage.push(item);
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
 function createIcon(classes) {

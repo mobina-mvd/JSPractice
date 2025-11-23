@@ -4,6 +4,8 @@ const inputInvalid = document.getElementById("input-invalid");
 const itemList = document.getElementById("item-list");
 const clearBtn = document.getElementById("items-clear");
 const filter = document.getElementById("filter");
+const formBtn = itemForm.querySelector("button");
+let isEditMode = false;
 
 function displayItems() {
   const itemsFromStorage = getItemsFromStorage();
@@ -24,12 +26,36 @@ function addItem(e) {
   } else {
     inputInvalid.textContent = "";
   }
+
+  if (isEditMode) {
+    // console.log("Edit Mode");
+    const itemToEdit = document.querySelector(".edit-mode");
+    romoveItemFromStorage(itemToEdit.textContent);
+    itemToEdit.remove();
+    formBtn.innerHTML = "<i class='bi bi-plus'></i> Add Item";
+    formBtn.classList.replace("btn-primary", "btn-dark");
+    isEditMode = false;
+  }
+  if (checkIfItemExists(newItem)) {
+    inputInvalid.textContent = "That item already Exists!";
+    return;
+  } else {
+    inputInvalid.textContent = "";
+  }
+
   addItemToDOM(newItem);
 
   addItemToStorage(newItem);
   itemInput.value = "";
 
   checkUI();
+}
+
+function checkIfItemExists(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  console.log(itemsFromStorage.includes(item));
+
+  return itemsFromStorage.includes(item);
 }
 
 // Add Item to UI
@@ -76,16 +102,32 @@ function onClickItem(e) {
   const isIcon = e.target.classList.contains("bi-x");
 
   if (isIcon) {
-    e.target.parentElement.remove();
-    romoveItemFromStorage(e.target.parentElement.textContent);
-    checkUI();
+    removeItem(e.target.parentElement);
+  } else {
+    setItemToEdit(e.target);
+    // console.log("Edit Mode");
   }
 }
+function removeItem(item) {
+  item.remove();
+  romoveItemFromStorage(item.textContent);
+  checkUI();
+}
+function setItemToEdit(item) {
+  isEditMode = true;
 
+  itemList.querySelectorAll("li").forEach((item) => {
+    item.classList.remove("edit-mode");
+  });
+  item.classList.add("edit-mode");
+  itemInput.value = item.textContent;
+  formBtn.innerHTML = "<i class='bi bi-pencil-fill'></i> Update Item";
+  formBtn.classList.replace("btn-dark", "btn-primary");
+}
 function romoveItemFromStorage(item) {
   let itemsFromStorage = getItemsFromStorage();
   itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
-  console.log(itemsFromStorage);
+  // console.log(itemsFromStorage);
 
   localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
